@@ -29,6 +29,14 @@ public class Result<Ok, Err> {
     @Nullable
     private Err err;
 
+    public boolean isOk() {
+        return ok != null;
+    }
+
+    public boolean isErr() {
+        return err != null;
+    }
+
     public String toJson() {
         GsonBuilder builder = new GsonBuilder();
         builder.serializeNulls();

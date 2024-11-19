@@ -5,9 +5,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Config {
-    @Value("${cors.origin}")
-    public String origin;
-
     @Value("${jwt.secret_key}")
     public String secret_key;
 

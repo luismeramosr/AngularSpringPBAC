@@ -6,7 +6,6 @@ import com.example.pbac.web.security.ErrorKind;
 import com.example.pbac.web.security.Result;
 import com.example.pbac.web.security.service.JwtService;
 import com.example.pbac.web.security.service.JwtService.ClaimWrapper;
-import com.example.pbac.web.security.service.JwtService.ClaimsWrapper;
 import com.example.pbac.web.security.service.JwtService.ExpiredWrapper;
 import com.example.pbac.web.security.service.JwtService.ValidationWrapper;
 
@@ -57,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * JWT.
      *
      * Si la solicitud corresponde a rutas específicas (e.g., `/auth/signin`,
-     * `/auth/signup`, `/auth/refresh_token`),
+     * `/auth/refresh_token`),
      * el filtro permite la solicitud sin validación adicional.
      *
      * Si un token JWT está presente, valida su expiración, extrae el nombre de
@@ -76,12 +75,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
-        boolean isSigningIn = ((HttpServletRequest) request).getRequestURL().toString().contains("/auth/signin");
-        boolean isSigningUp = ((HttpServletRequest) request).getRequestURL().toString().contains("/auth/signup");
+        boolean isSigningIn = ((HttpServletRequest) request).getRequestURL().toString().contains("/auth/login");
         boolean isRefreshingToken = ((HttpServletRequest) request).getRequestURL().toString()
                 .contains("/auth/refresh_token");
 
-        if (isSigningIn || isSigningUp || isRefreshingToken) {
+        if (isSigningIn || isRefreshingToken) {
             filter.doFilter(request, response);
             return;
         }

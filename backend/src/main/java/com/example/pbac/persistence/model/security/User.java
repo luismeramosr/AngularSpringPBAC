@@ -1,9 +1,8 @@
 package com.example.pbac.persistence.model.security;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -14,6 +13,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, unique = true)
+    private String username;
+    @Column(nullable = false, unique = true)
     private String email;
     private String password;
     private String firstname;
@@ -22,7 +23,6 @@ public class User {
     private Integer number;
     private String profileImage;
 
-    @NotBlank
     @Column(nullable = false)
     private boolean active;
 

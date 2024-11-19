@@ -1,7 +1,6 @@
 package com.example.pbac.web.security;
 
 import com.example.pbac.persistence.service.security.UserService;
-import com.example.pbac.util.config.Config;
 import com.example.pbac.web.middleware.JwtAuthenticationFilter;
 import com.example.pbac.web.security.provider.PasswordEncoderProvider;
 import lombok.AllArgsConstructor;
@@ -35,10 +34,10 @@ import org.springframework.web.cors.CorsConfiguration;
 @AllArgsConstructor
 public class SecurityConfig {
 
-    private final Config config;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserService userService;
-    private PasswordEncoderProvider passwordEncoder;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final PasswordEncoderProvider passwordEncoderProvider;
 
     /**
      * Configura los filtros de seguridad HTTP, las reglas de autorización y las
@@ -58,10 +57,6 @@ public class SecurityConfig {
                         .requestMatchers("/api-docs/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/postulant/**").permitAll()
-                        .requestMatchers("/user/**").permitAll()
-                        .requestMatchers("/admin/**").permitAll()
-                        .requestMatchers("/forgotpassword/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authProvider()).addFilterBefore(
@@ -69,13 +64,14 @@ public class SecurityConfig {
                 .cors(cors -> cors
                         .configurationSource(request -> {
                             CorsConfiguration corsConfiguration = new CorsConfiguration();
-                            corsConfiguration.addAllowedOrigin(config.origin);
+                            corsConfiguration.addAllowedOrigin("*");
                             corsConfiguration.addAllowedMethod("*");
                             corsConfiguration.addAllowedHeader("*");
                             corsConfiguration.addExposedHeader("Authorization");
                             corsConfiguration.setAllowCredentials(true);
                             return corsConfiguration;
-                        }));
+                        }))
+                .exceptionHandling(handling -> handling.accessDeniedHandler(customAccessDeniedHandler));
         return http.build();
     }
 
@@ -90,7 +86,7 @@ public class SecurityConfig {
     public AuthenticationProvider authProvider() {
         DaoAuthenticationProvider dao = new DaoAuthenticationProvider();
         dao.setUserDetailsService(userService.userDetailsService());
-        dao.setPasswordEncoder(passwordEncoder.passwordEncoder());
+        dao.setPasswordEncoder(passwordEncoderProvider.passwordEncoder());
         return dao;
     }
 

@@ -19,7 +19,7 @@ public class UserFactory implements UserDetails {
     private Collection<GrantedAuthority> authorities;
 
     public UserFactory(User user) {
-        this.username = user.getEmail();
+        this.username = user.getUsername();
         this.password = user.getPassword();
         this.enabled = user.isActive();
         this.authorities = new ArrayList<>();
