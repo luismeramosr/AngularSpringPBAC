@@ -1,4 +1,4 @@
-package com.example.pbac.persistence.model;
+package com.example.pbac.persistence.model.security;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -21,24 +21,6 @@ public class User {
     private String address;
     private Integer number;
     private String profileImage;
-    private Boolean isPremium;
-    private Double salaryPerHours;
-
-    @NotBlank
-    @Column(nullable = false)
-    private Date created_at;
-
-    @NotBlank
-    @Column(nullable = false)
-    private String created_by;
-
-    @NotBlank
-    @Column(nullable = false)
-    private Date updated_at;
-
-    @NotBlank
-    @Column(nullable = false)
-    private String updated_by;
 
     @NotBlank
     @Column(nullable = false)

@@ -1,4 +1,4 @@
-package com.example.pbac.persistence.model;
+package com.example.pbac.persistence.model.security;
 
 import java.util.List;
 
@@ -20,13 +20,12 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "roles")
 public class Role {
 
     public static Role getDefault() {
         Role role = new Role();
         role.setId(1);
-        role.setName("CUSTOMER");
+        role.setName("USUARIO");
         return role;
     }
 

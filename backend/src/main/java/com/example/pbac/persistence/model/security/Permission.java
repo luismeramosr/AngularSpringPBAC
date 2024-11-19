@@ -1,4 +1,4 @@
-package com.example.pbac.persistence.model;
+package com.example.pbac.persistence.model.security;
 
 import java.util.List;
 
@@ -15,7 +15,6 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "permissions")
 public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
