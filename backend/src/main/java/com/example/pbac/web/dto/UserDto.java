@@ -23,4 +23,8 @@ public class UserDto {
     private String username;
     @NotBlank
     private String email;
+    @NotBlank
+    private String firstName;
+    @NotBlank
+    private String lastName;
 }

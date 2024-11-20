@@ -97,6 +97,8 @@ public class UserService {
             return result;
         }
 
+        user = _user.get();
+
         try {
             user.setPassword(passwordEncoderProvider.passwordEncoder().encode(user.getPassword()));
             repository.save(user);

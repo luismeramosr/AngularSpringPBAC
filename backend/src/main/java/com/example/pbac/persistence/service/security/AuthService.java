@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import com.example.pbac.persistence.model.security.Role;
 import com.example.pbac.persistence.model.security.Session;
 import com.example.pbac.persistence.model.security.User;
 import com.example.pbac.util.config.Config;
@@ -187,6 +188,30 @@ public class AuthService {
         user.setEmail(_user.get().getEmail());
 
         result.setOk(user);
+        return result;
+    }
+
+    public Result<Boolean, Error> isAuthorized(String accessToken, String role) {
+        Result<Boolean, Error> result = new Result<>();
+        String username = jwtService.extractUsername(accessToken.substring(7)).getClaim();
+        Optional<User> _user = userService.findByUsername(username);
+
+        if (_user.isEmpty()) {
+            result.setErr(new Error("No se encontró el usuario.",
+                    "No se encontro el usuario segun sus claims",
+                    ErrorKind.RepositoryError));
+            return result;
+        }
+
+        result.setOk(false);
+        for (Role r : _user.get().getRoles()) {
+            logger.warn(r.getName());
+            logger.warn(role);
+            if (r.getName().equals(role)) {
+                result.setOk(true);
+            }
+        }
+
         return result;
     }
 }

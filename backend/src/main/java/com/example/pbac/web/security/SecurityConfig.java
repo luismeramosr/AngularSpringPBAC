@@ -1,6 +1,7 @@
 package com.example.pbac.web.security;
 
 import com.example.pbac.persistence.service.security.UserService;
+import com.example.pbac.util.config.Config;
 import com.example.pbac.web.middleware.JwtAuthenticationFilter;
 import com.example.pbac.web.security.provider.PasswordEncoderProvider;
 import lombok.AllArgsConstructor;
@@ -33,7 +34,7 @@ import org.springframework.web.cors.CorsConfiguration;
 @EnableMethodSecurity(prePostEnabled = true)
 @AllArgsConstructor
 public class SecurityConfig {
-
+    private final Config config;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserService userService;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
@@ -64,7 +65,7 @@ public class SecurityConfig {
                 .cors(cors -> cors
                         .configurationSource(request -> {
                             CorsConfiguration corsConfiguration = new CorsConfiguration();
-                            corsConfiguration.addAllowedOrigin("*");
+                            corsConfiguration.addAllowedOrigin(config.origin);
                             corsConfiguration.addAllowedMethod("*");
                             corsConfiguration.addAllowedHeader("*");
                             corsConfiguration.addExposedHeader("Authorization");

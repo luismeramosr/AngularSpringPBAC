@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/auth")
@@ -65,6 +66,21 @@ public class AuthController {
      * @return Un objeto `Result` con el nuevo JWT, o un error si la operación
      *         falla.
      */
+    @GetMapping("/is_authorized")
+    public ResponseEntity<Result<Boolean, Error>> isAuthorized(@RequestHeader("Authorization") String accessToken,
+            @RequestParam String role) {
+        Result<Boolean, Error> result = authService.isAuthorized(accessToken, role);
+
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     * Refresca el token JWT de un usuario.
+     *
+     * @param request Objeto `RefreshTokenRequest` que contiene el refresh token.
+     * @return Un objeto `Result` con el nuevo JWT, o un error si la operación
+     *         falla.
+     */
     @PostMapping("/refresh_token")
     public ResponseEntity<Result<JwtAuthResponse, Error>> refreshToken(@RequestBody RefreshTokenRequest request) {
         logger.info(String.format("RefreshToken: %s", request.getRefreshToken()));
@@ -79,14 +95,15 @@ public class AuthController {
     /**
      * Obtiene los datos del usuario a partir del token JWT.
      *
-     * @param token El token de autenticación que se pasa en el encabezado de la
-     *              solicitud.
+     * @param accessToken El token de autenticación que se pasa en el encabezado de
+     *                    la
+     *                    solicitud.
      * @return Un objeto `Result` con los datos del usuario, o un error si la
      *         operación falla.
      */
     @GetMapping("/user")
-    public ResponseEntity<Result<UserDto, Error>> getUserFromToken(@RequestHeader("Authorization") String token) {
-        Result<UserDto, Error> result = authService.getUserFromToken(token);
+    public ResponseEntity<Result<UserDto, Error>> getUserFromToken(@RequestHeader("Authorization") String accessToken) {
+        Result<UserDto, Error> result = authService.getUserFromToken(accessToken);
         if (result.getErr() != null) {
             return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
